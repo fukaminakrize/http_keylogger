@@ -1,3 +1,0 @@
-[submodule "sslsplit"]
-	path = sslsplit
-	url = https://github.com/nesfit/sslsplit.git

