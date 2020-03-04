@@ -1,5 +1,5 @@
 # Web Keylogger
-Persistent injection of hidden form and extraction of user's credentials if stored in the browser capable
+Tool for injecting monitoring script into the HTTP/S traffic during MITM attack. The script is capable of monitoring selected user's activities (submiting forms and pasting text) and extraction of user's stored credentials. Upon initial injection to the web page (origin), script is able to persist itself inside a browser and operate even after the MITM attack has completed up until user clears his/her browser.
 
 ## mitmproxy
 [mitmproxy][1] is an interactive, SSL/TLS-capable intercepting proxy with a console interface for HTTP/1, HTTP/2, and WebSockets.
@@ -13,7 +13,7 @@ Persistent injection of hidden form and extraction of user's credentials if stor
 * Intercepts:
   * data submitted to forms,
   * pasted text into webpage
-* Extracts user's credential by fakeing login form --- if credentials are stored for the domain, browser (Chrome, Firefox) injects them into hidden form
+* Extracts user's credential by faking login form --- if credentials are stored for the domain, browser (Chrome, Firefox) inserts them into the hidden fake login form
 
 ## docker-compose.yml
 
