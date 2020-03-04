@@ -7,4 +7,4 @@ RUN pip install -r requirements.txt
 COPY src/ .
 
 EXPOSE 8080
-ENTRYPOINT ["mitmdump", "-smitmproxy_inject.py", "--mode=regular", "--ssl-insecure"]
+ENTRYPOINT ["mitmdump", "-smitmproxy_inject.py", "--mode=transparent", "--ssl-insecure"]
