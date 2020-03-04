@@ -10,7 +10,9 @@ RUN mkdir -p /app
 WORKDIR /app
 COPY src/requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
+COPY docker-entrypoint.sh /usr/local/bin/
 COPY src .
 
 EXPOSE 80
-ENTRYPOINT ["python", "keylogger_server.py"]
+
+ENTRYPOINT ["docker-entrypoint.sh"]

@@ -1,4 +1,4 @@
-#!/usr/local/bin/python
+#!/usr/bin/env python
 
 from tornado.ioloop import IOLoop
 from tornado.httpserver import HTTPServer

