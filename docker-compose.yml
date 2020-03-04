@@ -40,3 +40,5 @@ services:
     container_name: keylogger_mongo
     image: mongo
     restart: unless-stopped
+    volumes:
+      - ./data/mongo:/data/db
