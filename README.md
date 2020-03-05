@@ -88,16 +88,15 @@ iptables -t nat -D PREROUTING -j MITM
 ## Client Setup
 
 ```bash
-# ip route del to default via XXX.XXX.XXX.XXX
-# ip route add default via YYY.YYY.YYY.YY
+# Simulate MITM by setting a default gateway to attackers IP
+ip route del to default via ORIGINAL_DEFAULT_GATEWAY_IP
+ip route add default via ATTACKER_IP
 
-Visit mitm.it in client browser and install certificate (Other)
-
-curl -k https://www.messenger.com
+Visit mitm.it in client browser and install CA certificate
 ```
 
 ## Demonstration
-- https://www.youtube.com/watch?v=kO2t3eZgG-8
+- https://youtu.be/wcNaJEpQFnc
 
 ## Read more
 
